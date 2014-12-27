@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Web", "zCush\zCush.Web.csproj", "{0FACC5DF-F0C2-416F-B573-9CC5D514D836}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B049881F-B777-4363-9208-403FC486FBBA} = {B049881F-B777-4363-9208-403FC486FBBA}
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC} = {91E2B268-957A-4B74-A1F0-2096A2734CEC}
+		{824DB7A1-9652-4240-9240-8368CB30B1CF} = {824DB7A1-9652-4240-9240-8368CB30B1CF}
+		{84350FAC-725C-4331-9F8A-B6CADD603628} = {84350FAC-725C-4331-9F8A-B6CADD603628}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Tests", "zCush.Tests\zCush.Tests.csproj", "{615CF859-AB38-4B76-A9C5-15233B6BFDE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Partners", "zCush.Partners\zCush.Partners.csproj", "{B049881F-B777-4363-9208-403FC486FBBA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC} = {91E2B268-957A-4B74-A1F0-2096A2734CEC}
+		{824DB7A1-9652-4240-9240-8368CB30B1CF} = {824DB7A1-9652-4240-9240-8368CB30B1CF}
+		{84350FAC-725C-4331-9F8A-B6CADD603628} = {84350FAC-725C-4331-9F8A-B6CADD603628}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Partners.Tests", "zCush.Partners.Tests\zCush.Partners.Tests.csproj", "{0454C4DE-8731-47D2-900A-10D5C47A68EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Orders", "zCush.Orders\zCush.Orders.csproj", "{84350FAC-725C-4331-9F8A-B6CADD603628}"
+	ProjectSection(ProjectDependencies) = postProject
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC} = {91E2B268-957A-4B74-A1F0-2096A2734CEC}
+		{824DB7A1-9652-4240-9240-8368CB30B1CF} = {824DB7A1-9652-4240-9240-8368CB30B1CF}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Frameworks", "zCush.Frameworks\zCush.Frameworks.csproj", "{824DB7A1-9652-4240-9240-8368CB30B1CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Services", "zCush.Services\zCush.Services.csproj", "{BBA3F928-1287-4323-90F5-B1FCF9E6E18E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Common", "zCush.Common\zCush.Common.csproj", "{91E2B268-957A-4B74-A1F0-2096A2734CEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0FACC5DF-F0C2-416F-B573-9CC5D514D836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FACC5DF-F0C2-416F-B573-9CC5D514D836}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FACC5DF-F0C2-416F-B573-9CC5D514D836}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FACC5DF-F0C2-416F-B573-9CC5D514D836}.Release|Any CPU.Build.0 = Release|Any CPU
+		{615CF859-AB38-4B76-A9C5-15233B6BFDE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{615CF859-AB38-4B76-A9C5-15233B6BFDE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{615CF859-AB38-4B76-A9C5-15233B6BFDE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{615CF859-AB38-4B76-A9C5-15233B6BFDE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B049881F-B777-4363-9208-403FC486FBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B049881F-B777-4363-9208-403FC486FBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B049881F-B777-4363-9208-403FC486FBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B049881F-B777-4363-9208-403FC486FBBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0454C4DE-8731-47D2-900A-10D5C47A68EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0454C4DE-8731-47D2-900A-10D5C47A68EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0454C4DE-8731-47D2-900A-10D5C47A68EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0454C4DE-8731-47D2-900A-10D5C47A68EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84350FAC-725C-4331-9F8A-B6CADD603628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84350FAC-725C-4331-9F8A-B6CADD603628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84350FAC-725C-4331-9F8A-B6CADD603628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84350FAC-725C-4331-9F8A-B6CADD603628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{824DB7A1-9652-4240-9240-8368CB30B1CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{824DB7A1-9652-4240-9240-8368CB30B1CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{824DB7A1-9652-4240-9240-8368CB30B1CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{824DB7A1-9652-4240-9240-8368CB30B1CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBA3F928-1287-4323-90F5-B1FCF9E6E18E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBA3F928-1287-4323-90F5-B1FCF9E6E18E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBA3F928-1287-4323-90F5-B1FCF9E6E18E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBA3F928-1287-4323-90F5-B1FCF9E6E18E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,126 @@
+﻿@model IEnumerable<zCush.Partners.PurchaseOrder>
+
+@{
+    ViewBag.Title = "PurchaseOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>PurchaseOrders</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PONumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PODate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PONumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PODate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <h4>Ship To:</h4>
+                <table>
+                    <tr>
+                        <td><b>ContactName : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.ContactName)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Address Line 1 : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.AddressLine1)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Address Line 2 : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.AddressLine2)</td>
+                    </tr>
+                    <tr>
+                        <td><b>City : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.City)</td>
+                    </tr>
+                    <tr>
+                        <td><b>State : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.State)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Zip Code : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.ZipCode)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Raw Address Text : </b></td>
+                        <td>@Html.DisplayFor(modelItem => item.ShipAddress.RawAddress)</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th>
+                           SKU
+                        </th>
+                        <th>
+                           Product Description
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th></th>
+                    </tr>
+                 @foreach (var poItem in item.POLineItems) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(poLineItem => poItem.SKU)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(poLineItem => poItem.ProductDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(poLineItem => poItem.Quantity)
+                        </td>
+                        <td>
+                           @Html.DisplayFor(poLineItem => poItem.Price)
+                        </td>
+                        <td>
+                           @Html.DisplayFor(poLineItem => poItem.LineItemTotal)
+                        </td>
+                    </tr>
+                }
+                </table>
+            </td>
+    </tr>
+}
+
+</table>
