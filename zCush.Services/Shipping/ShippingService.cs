@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Net;
 using System.Security.Principal;
+using zCush.Services.Printing;
 
 namespace zCush.Services.Shipping
 {
@@ -76,29 +77,11 @@ namespace zCush.Services.Shipping
         private void BuyAndPrintShipment(Shipment shipment, Rate rate)
         {
             shipment.Buy(rate.id);
-            var fileName = "shipment" + DateTime.Now.Ticks;
-            using (WebClient wc = new WebClient())
-            {
-                wc.DownloadFile(shipment.postage_label.label_url, String.Format("c:/shipments/{0}.png", fileName));
-                printLabel(fileName);
-            };
+
+            var ps = new PrintingService();
+            ps.DownloadFileAndPrint(shipment.postage_label.label_url);
         }
 
-        private void printLabel(string fileName)
-        {
-            PrintDocument pd = new PrintDocument();
-            pd.PrinterSettings.PrinterName = "HPPrinter";
-            pd.PrintPage += (sender, args) =>
-            {
-                Image i = Image.FromFile(String.Format("c:/shipments/{0}.png", fileName));
-                Point p = new Point(100, 100);
-                args.Graphics.DrawImage(i, 10, 10, i.Width, i.Height);
-            };
-
-            using (var wic = WindowsIdentity.Impersonate(IntPtr.Zero))
-            {
-                pd.Print();
-            }                  
-        }
+        
     }
 }

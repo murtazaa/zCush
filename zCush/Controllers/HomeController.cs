@@ -5,7 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using zCush.Orders;
 using zCush.Partners.Amazon;
+using zCush.Partners.WayFair;
 using zCush.Partners.WebSite;
+using zCush.Services.Email;
 
 namespace zCush.Controllers
 {
@@ -36,6 +38,26 @@ namespace zCush.Controllers
             var wsPos = wsOrder.GetWebSiteOrders();
 
             return View("~/Views/Home/PurchaseOrders.cshtml", wsPos);
+        }
+
+        [HttpGet]
+        public ViewResult WayfairOrders()
+        {
+            var wfOrder = new WayfairOrder();
+
+            var wfPos = wfOrder.GetWayFairOrders();
+
+            return View("~/Views/Home/PurchaseOrders.cshtml", wfPos);
+        }
+
+        [HttpGet]
+        public ViewResult GetzCushEmails()
+        {
+            var es = new EmailService();
+
+            var emails = es.GetAllEmailsOn(DateTime.Today.AddDays(-1));
+
+            return View("~/Views/Home/zCushEmails.cshtml", emails);
         }
     }
 }
