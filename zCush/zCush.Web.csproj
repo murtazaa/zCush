@@ -50,6 +50,12 @@
     <Reference Include="EasyPost">
       <HintPath>..\packages\EasyPost-Official.1.1.3.0\lib\net45\EasyPost.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\iTextSharp.5.5.4\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.4\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
     <Reference Include="LinqToExcel">
       <HintPath>..\packages\LinqToExcel.1.10.1\lib\LinqToExcel.dll</HintPath>
     </Reference>
@@ -58,6 +64,9 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcRazorToPdf">
+      <HintPath>..\packages\MvcRazorToPdf.1.0.2\lib\40\MvcRazorToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EasyPost-Official.1.1.3.0\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -235,6 +244,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\PurchaseOrders.cshtml" />
     <Content Include="Views\Home\zCushEmails.cshtml" />
+    <Content Include="Views\Home\AmazonLabelAddresses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\zCush.Common\zCush.Common.csproj">

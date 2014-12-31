@@ -109,13 +109,12 @@ namespace zCush.Api
             var shipTo = new zCush.Common.Dtos.Address();
 
             //EXPRESS TEST ADDRESS
-            shipTo.ContactName = "WHQ-Global Scanning Solutions";
-            shipTo.CompanyName = "Barcode Analysis";
-            shipTo.AddressLine1 = "10 FedEx Parkway";
-            shipTo.AddressLine2 = "1st Floor";
-            shipTo.City = "Collierville";
-            shipTo.State = "TN";
-            shipTo.ZipCode = "38017";
+            shipTo.ContactName = "Amazon Warehouse";
+            shipTo.CompanyName = "Amazon";
+            shipTo.AddressLine1 = "800 N 75th Ave";
+            shipTo.City = "Phoenix";
+            shipTo.State = "AZ";
+            shipTo.ZipCode = "85043";
 
             //GROUND TEST ADDRESS
             //shipTo.ContactName = "FedEx Ground";
@@ -125,7 +124,7 @@ namespace zCush.Api
             //shipTo.State = "PA";
             //shipTo.ZipCode = "15108";
 
-            ss.CreateFedExLabel(shipTo);
+            ss.CreateFedExLabel(shipTo, Shipping3PartyAccounts.Amazon, "12345");
 
             return Request.CreateResponse(HttpStatusCode.OK, "Success");
         }
@@ -154,7 +153,7 @@ namespace zCush.Api
             try
             {
                 var pps = new PayPalService();
-                transactionDetails = pps.GetTransactionDetails();
+                transactionDetails = pps.GetTransactionDetails("abc");
             }
             catch (PayPal.PaymentsException ex)
             {
@@ -164,23 +163,23 @@ namespace zCush.Api
             return Request.CreateResponse(HttpStatusCode.OK, transactionDetails);
         }
 
-        [HttpGet]
-        public HttpResponseMessage GetTransactions()
-        {
-            var transactions = new List<PaymentTransactionSearchResultType>();
+        //[HttpGet]
+        //public HttpResponseMessage GetTransactions()
+        //{
+        //    var transactions = new List<PaymentTransactionSearchResultType>();
 
-             try
-             {
-               var pps = new PayPalService();
-               transactions = pps.GetTransactions();
-             }
-             catch (PayPal.PaymentsException ex)
-             {
-                 logPayPalException(ex);
-             }
+        //     try
+        //     {
+        //       var pps = new PayPalService();
+        //       transactions = pps.GetTransactions();
+        //     }
+        //     catch (PayPal.PaymentsException ex)
+        //     {
+        //         logPayPalException(ex);
+        //     }
 
-             return Request.CreateResponse(HttpStatusCode.OK, transactions);
-        }
+        //     return Request.CreateResponse(HttpStatusCode.OK, transactions);
+        //}
 
         [HttpGet]
         public HttpResponseMessage GetPayments()

@@ -11,28 +11,28 @@ namespace zCush.Partners.PayPal
 {
     public class PayPalService
     {
-        public Sale GetPayPalOrders()
-        {
-            //var saleId = "14X52113A9302202F";
-            // ### Api Context
-            // Pass in a `APIContext` object to authenticate 
-            // the call and to send a unique request id 
-            // (that ensures idempotency). The SDK generates
-            // a request id if you do not pass one explicitly. 
-            // See [Configuration.cs](/Source/Configuration.html) to know more about APIContext.
-            var apiContext = PayPalConfiguration.GetAPIContext();
+        //public Sale GetPayPalOrders()
+        //{
+        //    //var saleId = "14X52113A9302202F";
+        //    // ### Api Context
+        //    // Pass in a `APIContext` object to authenticate 
+        //    // the call and to send a unique request id 
+        //    // (that ensures idempotency). The SDK generates
+        //    // a request id if you do not pass one explicitly. 
+        //    // See [Configuration.cs](/Source/Configuration.html) to know more about APIContext.
+        //    var apiContext = PayPalConfiguration.GetAPIContext();
 
-            var saleId = "4V7971043K262623A";
+        //    var saleId = "4V7971043K262623A";
 
-            // ^ Ignore workflow code segment
-            #region Track Workflow
-            //this.flow.AddNewRequest("Get sale", description: "ID: " + saleId);
-            #endregion
+        //    // ^ Ignore workflow code segment
+        //    #region Track Workflow
+        //    //this.flow.AddNewRequest("Get sale", description: "ID: " + saleId);
+        //    #endregion
 
-            var sale = Sale.Get(apiContext, saleId);
+        //    var sale = Sale.Get(apiContext, saleId);
 
-            return sale;
-        }
+        //    return sale;
+        //}
 
         public Plan GetBillingPlan()
         {
@@ -71,15 +71,43 @@ namespace zCush.Partners.PayPal
             return agreement;
         }
 
-        public List<PaymentTransactionSearchResultType> GetTransactions()
+        public List<PurchaseOrder> GetPayPalOrders()
         {
-            //var apiContext = PayPalConfiguration.GetAPIContext();
-            //var agreementId = "I-UWM998D05VB3";
-            var startDate = "2014-12-24";
-            var endDate = "2014-12-27";
-            //return Agreement.ListTransactions(apiContext, agreementId, startDate, endDate); 
-            var tsrt = TransactionSearchAPIOperation();
-            return tsrt.PaymentTransactions.Where(pt => pt.Status == "Completed").ToList();
+            var PPPos = new List<PurchaseOrder>();
+            var payPalTransactions = TransactionSearchAPIOperation().PaymentTransactions.Where(pt => pt.Status == "Completed");
+            var products = Products.GetAllProducts().ToDictionary(k => k.Description, v => v.SKU);
+            foreach(var ppt in payPalTransactions)
+            {
+                var pptDetails = GetTransactionDetails(ppt.TransactionID);
+
+                var purchaseOrder = new PurchaseOrder
+                {
+                    PONumber = ppt.TransactionID,
+                    ShipAddress = GetAddress(pptDetails.PaymentTransactionDetails.PayerInfo.Address)
+                };
+               
+                foreach(var paymentItem in  pptDetails.PaymentTransactionDetails.PaymentItemInfo.PaymentItem)
+                {
+                    if (paymentItem.Name != null &&
+                       paymentItem.Amount.value != null &&
+                       paymentItem.Quantity != null)
+                    {
+                        purchaseOrder.POLineItems.Add(new POLineItem
+                        {
+                            ProductDescription = paymentItem.Name,
+                            Price = decimal.Parse(paymentItem.Amount.value),
+                            Quantity = int.Parse(paymentItem.Quantity)
+                        });
+                    }
+                }
+
+                if (purchaseOrder.POLineItems.Any())
+                {
+                    PPPos.Add(purchaseOrder);
+                }
+            }
+
+            return PPPos;
         }
 
         // # TransactionSearch API Operation
@@ -147,7 +175,7 @@ namespace zCush.Partners.PayPal
 
         // # GetTransactionDetails API Operation
         // The GetTransactionDetails API operation obtains information about a specific transaction. 
-        public GetTransactionDetailsResponseType GetTransactionDetails()
+        public GetTransactionDetailsResponseType GetTransactionDetails(string transactionId)
         {
             // Create the GetTransactionDetailsResponseType object
             var responseGetTransactionDetailsResponseType = new GetTransactionDetailsResponseType();
@@ -163,7 +191,7 @@ namespace zCush.Partners.PayPal
                 // The details for some kinds of transactions cannot be retrieved with
                 // GetTransactionDetails. You cannot obtain details of bank transfer
                 // withdrawals, for example.`
-                getTransactionDetailsRequest.TransactionID = "31038677X43877236";
+                getTransactionDetailsRequest.TransactionID = transactionId;
                 getTransactionDetails.GetTransactionDetailsRequest = getTransactionDetailsRequest;
 
                 // Create the service wrapper object to make the API call
@@ -226,6 +254,18 @@ namespace zCush.Partners.PayPal
             var startDate = "2013-12-24";
             var endDate = "2015-12-27";
             return Plan.List(apiContext: apiContext, status: "CREATED");
+        }
+
+        private zCush.Common.Dtos.Address GetAddress(AddressType address)
+        {
+            return new Common.Dtos.Address
+            {
+                AddressLine1 = address.Street1,
+                AddressLine2 = address.Street2,
+                City = address.CityName,
+                State = address.StateOrProvince,
+                ZipCode = address.PostalCode
+            };
         }
     }
 }

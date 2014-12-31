@@ -1,12 +1,14 @@
 ﻿using ActiveUp.Net.Mail;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace zCush.Services.Email
 {
+
     public class zCushOrderEmail : Message { };
 
     public class EmailService
@@ -47,8 +49,6 @@ namespace zCush.Services.Email
                         newMessage = inbox.Fetch.MessageObject(msgCount--);
                     }
                 }
-
-                return orderMails;
             }
 
             catch (Imap4Exception iex)

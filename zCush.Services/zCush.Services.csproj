@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Printing\PrintingService.cs" />
+    <Compile Include="Shipping\CarrierType.cs" />
     <Compile Include="Shipping\ShippingService.cs" />
   </ItemGroup>
   <ItemGroup />

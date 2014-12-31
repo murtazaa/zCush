@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using zCush.Frameworks.AddressParser;
 using zCush.Services.Email;
+using zCush.Services.Printing;
 using zCush.Services.Shipping;
 
 namespace zCush.Partners.WayFair
@@ -16,7 +17,7 @@ namespace zCush.Partners.WayFair
         {
             var wayFairPos = new List<PurchaseOrder>();
             var es = new EmailService();
-            var emails = es.GetAllEmailsOn(DateTime.Today.AddDays(-1));
+            var emails = es.GetAllEmailsOn(DateTime.Today);
 
             foreach (var email in emails)
             {
@@ -24,17 +25,49 @@ namespace zCush.Partners.WayFair
 
                 if (isWayFairEmail)
                 {
+                    var ShipToAddress = ExtractAddressFromEmail(email.BodyText.Text);
+                    var PoNumber = ExtractPOFromEmailSubject(email.Subject);
                     var po = new PurchaseOrder
                     {
-                        PONumber = email.Subject,
-                        ShipAddress = ExtractAddressFromEmail(email.BodyText.Text)
+                        PONumber = PoNumber,
+                        ShipAddress = ShipToAddress
                     };
+
+                    PrintPackingSlip(email.BodyText.Text);
+                    var fds = new ShippingService();
+                    fds.CreateUPSGroundLabel(ShipToAddress, Shipping3PartyAccounts.WayFair, PoNumber);
+                    //fds.CreateFedExLabel(ShipToAddress, Shipping3PartyAccounts.Amazon, PoNumber);
 
                     wayFairPos.Add(po);
                 }
             }
 
             return wayFairPos;
+        }
+
+        private void PrintPackingSlip(string wayfairEmailBody)
+        {
+            var culture = new CultureInfo("EN-US");
+            var urlStartString = "Packing Slip URL:";
+            var indexOfPackingSlipURLStart = culture.CompareInfo.IndexOf(wayfairEmailBody, urlStartString, CompareOptions.IgnoreCase);
+
+            var packingSlipUrl = wayfairEmailBody.Substring(indexOfPackingSlipURLStart + urlStartString.Length);
+
+            var ps = new PrintingService();
+            ps.DownloadFileAndPrint(packingSlipUrl, "pdf");
+
+        }
+
+        private string ExtractPOFromEmailSubject(string emailSubject)
+        {
+            var culture = new CultureInfo("EN-US");
+            var startString = "CS";
+            var endString = " - (";
+
+            var indexOfStart = culture.CompareInfo.IndexOf(emailSubject, startString, CompareOptions.IgnoreCase);
+            var indexOfEnd = culture.CompareInfo.IndexOf(emailSubject, endString, CompareOptions.IgnoreCase);
+
+            return emailSubject.Substring(indexOfStart, indexOfEnd - indexOfStart);
         }
 
         private zCush.Common.Dtos.Address ExtractAddressFromEmail(string wayfairEmailBody)
@@ -58,15 +91,10 @@ namespace zCush.Partners.WayFair
                 address.AddressLine2 = parsedAddress.SecondaryUnit + " " + parsedAddress.SecondaryNumber;
                 address.City = parsedAddress.City;
                 address.State = parsedAddress.State;
-                address.ZipCode = parsedAddress.Zip;
-
-                var fds = new ShippingService();
-                //fds.CreateUPSGroundLabel(address);
-
+                address.ZipCode = parsedAddress.Zip;           
             }
             address.RawAddress = rawAddressString;
             return address;
-
         }
 
         private string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)

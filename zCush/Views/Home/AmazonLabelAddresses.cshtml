@@ -1,0 +1,54 @@
+﻿@model IEnumerable<zCush.Partners.Amazon.AmazonLabelAddresses>
+
+@{
+    ViewBag.Title = "AmazonLabelAddresses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AmazonLabelAddresses</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>Carrier</th>
+        <th>Company Name</th>
+        <th>Contact Name</th>
+        <th>Address Line 1</th>
+        <th>Address Line 2</th>
+        <th>City</th>
+        <th>State</th>
+        <th>ZipCode</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Carrier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.CompanyName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.ContactName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.AddressLine1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.AddressLine2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.State)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.ZipCode)
+        </td>
+    </tr>
+}
+
+</table>

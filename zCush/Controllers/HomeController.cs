@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using zCush.Orders;
 using zCush.Partners.Amazon;
+using zCush.Partners.PayPal;
 using zCush.Partners.WayFair;
 using zCush.Partners.WebSite;
 using zCush.Services.Email;
@@ -33,9 +34,9 @@ namespace zCush.Controllers
         [HttpGet]
         public ViewResult WebSiteOrders()
         {
-            var wsOrder = new WebSiteOrder();
+            var wsOrder = new PayPalService();
 
-            var wsPos = wsOrder.GetWebSiteOrders();
+            var wsPos = wsOrder.GetPayPalOrders();
 
             return View("~/Views/Home/PurchaseOrders.cshtml", wsPos);
         }
@@ -49,6 +50,17 @@ namespace zCush.Controllers
 
             return View("~/Views/Home/PurchaseOrders.cshtml", wfPos);
         }
+
+        [HttpGet]
+        public ViewResult GetAmazonShippingLabels()
+        {
+            var ams = new AmazonService();
+
+            var amazonOrders = ams.GetAmazonAddresses(DateTime.Today.AddDays(-120));
+
+            return View("~/Views/Home/AmazonLabelAddresses.cshtml", amazonOrders);
+        }
+
 
         [HttpGet]
         public ViewResult GetzCushEmails()
