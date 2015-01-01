@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Services", "zCush.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Common", "zCush.Common\zCush.Common.csproj", "{91E2B268-957A-4B74-A1F0-2096A2734CEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zCush.Data", "zCush.Data\zCush.Data.csproj", "{28166CED-46A8-4CAD-977B-B8B13DFCAB31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91E2B268-957A-4B74-A1F0-2096A2734CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28166CED-46A8-4CAD-977B-B8B13DFCAB31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28166CED-46A8-4CAD-977B-B8B13DFCAB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28166CED-46A8-4CAD-977B-B8B13DFCAB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28166CED-46A8-4CAD-977B-B8B13DFCAB31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

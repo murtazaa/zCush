@@ -17,7 +17,7 @@ namespace zCush.Partners.WayFair
         {
             var wayFairPos = new List<PurchaseOrder>();
             var es = new EmailService();
-            var emails = es.GetAllEmailsOn(DateTime.Today);
+            var emails = es.GetAllEmailsOn(DateTime.Today.AddDays(-2).AddHours(6));
 
             foreach (var email in emails)
             {
@@ -36,7 +36,6 @@ namespace zCush.Partners.WayFair
                     PrintPackingSlip(email.BodyText.Text);
                     var fds = new ShippingService();
                     fds.CreateUPSGroundLabel(ShipToAddress, Shipping3PartyAccounts.WayFair, PoNumber);
-                    //fds.CreateFedExLabel(ShipToAddress, Shipping3PartyAccounts.Amazon, PoNumber);
 
                     wayFairPos.Add(po);
                 }

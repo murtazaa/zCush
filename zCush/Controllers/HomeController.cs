@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using zCush.Data;
 using zCush.Orders;
 using zCush.Partners.Amazon;
 using zCush.Partners.PayPal;
@@ -49,6 +50,16 @@ namespace zCush.Controllers
             var wfPos = wfOrder.GetWayFairOrders();
 
             return View("~/Views/Home/PurchaseOrders.cshtml", wfPos);
+        }
+
+        [HttpGet]
+        public ViewResult GetProducts()
+        {
+            var zuow = new zCushUnitOfWork();
+
+            var zProducts = zuow.Products.ToList();
+
+            return View("~/Views/Home/Products.cshtml", zProducts);
         }
 
         [HttpGet]

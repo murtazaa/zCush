@@ -6,6 +6,7 @@ using PayPal;
 using PayPal.Api;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
+using zCush.Services.Shipping;
 
 namespace zCush.Partners.PayPal
 {
@@ -79,11 +80,11 @@ namespace zCush.Partners.PayPal
             foreach(var ppt in payPalTransactions)
             {
                 var pptDetails = GetTransactionDetails(ppt.TransactionID);
-
+                var shipToAddress = GetAddress(pptDetails.PaymentTransactionDetails.PayerInfo.Address);
                 var purchaseOrder = new PurchaseOrder
                 {
                     PONumber = ppt.TransactionID,
-                    ShipAddress = GetAddress(pptDetails.PaymentTransactionDetails.PayerInfo.Address)
+                    ShipAddress = shipToAddress
                 };
                
                 foreach(var paymentItem in  pptDetails.PaymentTransactionDetails.PaymentItemInfo.PaymentItem)
@@ -98,8 +99,11 @@ namespace zCush.Partners.PayPal
                             Price = decimal.Parse(paymentItem.Amount.value),
                             Quantity = int.Parse(paymentItem.Quantity)
                         });
-                    }
+                    }                    
                 }
+
+                var ss = new ShippingService();
+                ss.CreateFedExLabel(shipToAddress, Shipping3PartyAccounts.None, ppt.TransactionID);
 
                 if (purchaseOrder.POLineItems.Any())
                 {
@@ -126,7 +130,7 @@ namespace zCush.Partners.PayPal
                 // 
                 // * `Start Date` - The earliest transaction date at which to start the
                 // search.
-                var transactionSearchRequest = new TransactionSearchRequestType("2014-12-20T00:00:00+0530");
+                var transactionSearchRequest = new TransactionSearchRequestType("2014-12-29T00:00:00+0530");
                 requestTransactionSearch.TransactionSearchRequest = transactionSearchRequest;
 
                 // Create the service wrapper object to make the API call
@@ -260,6 +264,7 @@ namespace zCush.Partners.PayPal
         {
             return new Common.Dtos.Address
             {
+                ContactName = address.Name,
                 AddressLine1 = address.Street1,
                 AddressLine2 = address.Street2,
                 City = address.CityName,

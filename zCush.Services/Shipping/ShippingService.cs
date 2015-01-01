@@ -106,24 +106,28 @@ namespace zCush.Services.Shipping
                 {"phone", "7324474916"}
             };
 
-            var thirdPartyAccountInfo = GetFedExAccountInfo(accontyType);
+            var newShipment = new Dictionary<string, object>() {
+                    {"parcel", new Dictionary<string, object>() {
+                      {"length", 18},
+                      {"width", 12},
+                      {"height", 8},
+                      {"weight", 3}}
+                    },
+                    {"to_address", toAddress},
+                    {"from_address", fromAddress}
+            };
 
-            var shipment = Shipment.Create(new Dictionary<string, object>() {
-                {"parcel", new Dictionary<string, object>() {
-                  {"length", 18},
-                  {"width", 12},
-                  {"height", 8},
-                  {"weight", 3}}
-                },
-                {"to_address", toAddress},
-                {"from_address", fromAddress}, 
-                {"options" , new Dictionary<string, object>(){
-                    {"bill_third_party_account",  thirdPartyAccountInfo.AccountNumber}, 
-                    {"print_custom_1", referenceNumber}}
-                }, 
-                {"reference", referenceNumber}
-            });
+            if (accontyType != Shipping3PartyAccounts.None)
+            {
+                var thirdPartyAccountInfo = GetFedExAccountInfo(accontyType);
 
+                newShipment.Add("options" , new Dictionary<string, object>(){
+                        {"bill_third_party_account",  thirdPartyAccountInfo.AccountNumber}, 
+                        {"print_custom_1", referenceNumber}});
+                newShipment.Add("reference", referenceNumber);
+            }
+
+            var shipment = Shipment.Create(newShipment);
             return shipment;
         }
 
@@ -174,6 +178,7 @@ namespace zCush.Services.Shipping
     }
 
     public enum Shipping3PartyAccounts {
+        None,
         WayFair,
         Amazon,
         UnbeatableSales
