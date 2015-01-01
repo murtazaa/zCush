@@ -16,7 +16,7 @@ namespace zCush.Data
     {
         public Contact()
         {
-            this.BusinessCustomers = new HashSet<BusinessCustomer>();
+            this.Customers = new HashSet<Customer>();
         }
     
         public string FirstName { get; set; }
@@ -27,6 +27,6 @@ namespace zCush.Data
         public string LastName { get; set; }
         public int ID { get; set; }
     
-        public virtual ICollection<BusinessCustomer> BusinessCustomers { get; set; }
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 }

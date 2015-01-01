@@ -51,13 +51,16 @@
     <Compile Include="Address.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="BusinessCustomer.cs">
-      <DependentUpon>zCushContext.tt</DependentUpon>
-    </Compile>
     <Compile Include="CarrierType.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Contact.cs">
+      <DependentUpon>zCushContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Customer.cs">
+      <DependentUpon>zCushContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerType.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Order.cs">

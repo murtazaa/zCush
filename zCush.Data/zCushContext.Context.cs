@@ -27,7 +27,6 @@ namespace zCush.Data
     
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<BusinessCustomer> BusinessCustomers { get; set; }
         public virtual DbSet<CarrierType> CarrierTypes { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
@@ -35,5 +34,7 @@ namespace zCush.Data
         public virtual DbSet<OrderStatu> OrderStatus { get; set; }
         public virtual DbSet<Shipment> Shipments { get; set; }
         public virtual DbSet<Ref_AmazonWarehouse> Ref_AmazonWarehouse { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<CustomerType> CustomerTypes { get; set; }
     }
 }

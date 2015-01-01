@@ -27,8 +27,8 @@ namespace zCush.Data
         public int OrderStatusId { get; set; }
     
         public virtual Address Address { get; set; }
-        public virtual BusinessCustomer BusinessCustomer { get; set; }
         public virtual OrderStatu OrderStatu { get; set; }
         public virtual ICollection<OrderLineItem> OrderLineItems { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

@@ -12,25 +12,16 @@ namespace zCush.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Address
+    public partial class CustomerType
     {
-        public Address()
+        public CustomerType()
         {
-            this.Orders = new HashSet<Order>();
-            this.Ref_AmazonWarehouse = new HashSet<Ref_AmazonWarehouse>();
             this.Customers = new HashSet<Customer>();
         }
     
         public int ID { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string ZipCode { get; set; }
-        public string Country { get; set; }
+        public string Type { get; set; }
     
-        public virtual ICollection<Order> Orders { get; set; }
-        public virtual ICollection<Ref_AmazonWarehouse> Ref_AmazonWarehouse { get; set; }
         public virtual ICollection<Customer> Customers { get; set; }
     }
 }

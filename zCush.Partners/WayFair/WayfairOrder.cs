@@ -27,15 +27,17 @@ namespace zCush.Partners.WayFair
                 {
                     var ShipToAddress = ExtractAddressFromEmail(email.BodyText.Text);
                     var PoNumber = ExtractPOFromEmailSubject(email.Subject);
+                    var poLineItems = ExtractPOLineItemsFromEmail(email.BodyText.Text);
                     var po = new PurchaseOrder
                     {
                         PONumber = PoNumber,
-                        ShipAddress = ShipToAddress
+                        ShipAddress = ShipToAddress,
+                        POLineItems = poLineItems
                     };
 
-                    PrintPackingSlip(email.BodyText.Text);
-                    var fds = new ShippingService();
-                    fds.CreateUPSGroundLabel(ShipToAddress, Shipping3PartyAccounts.WayFair, PoNumber);
+                    //PrintPackingSlip(email.BodyText.Text);
+                    //var fds = new ShippingService();
+                    //fds.CreateUPSGroundLabel(ShipToAddress, Shipping3PartyAccounts.WayFair, PoNumber);
 
                     wayFairPos.Add(po);
                 }
@@ -67,6 +69,65 @@ namespace zCush.Partners.WayFair
             var indexOfEnd = culture.CompareInfo.IndexOf(emailSubject, endString, CompareOptions.IgnoreCase);
 
             return emailSubject.Substring(indexOfStart, indexOfEnd - indexOfStart);
+        }
+
+        private List<POLineItem> ExtractPOLineItemsFromEmail(string wayfairEmailBody)
+        {
+            var poLineItems = new List<POLineItem>();
+            var culture = new CultureInfo("EN-US");
+            var startString = "PRICE";
+            var endString = "TOTAL";
+            var products = Products.GetAllProducts().ToDictionary(k => k.SKU, v => v.Description);
+
+            var indexOfStart = culture.CompareInfo.IndexOf(wayfairEmailBody, startString, CompareOptions.IgnoreCase);
+            var indexOfEnd = culture.CompareInfo.IndexOf(wayfairEmailBody, endString, CompareOptions.IgnoreCase);
+            var rawString = wayfairEmailBody.Substring(indexOfStart + 5, indexOfEnd - indexOfStart - 5);
+
+
+            //Replace '-'s
+            var indexOfFirstLineBreak = rawString.IndexOf("\r\n");
+            rawString = rawString.Substring(indexOfFirstLineBreak + 2);
+            var indexOfSecondLineBreak = rawString.IndexOf("\r\n");
+            rawString = rawString.Substring(indexOfSecondLineBreak + 2);
+
+            var numberOfLineItems = rawString.Split("***".ToCharArray());
+
+            foreach(var lineItemString in numberOfLineItems)
+            {
+                var lineString = lineItemString;
+                lineString = lineString.Replace("\r\n", "");
+                lineString = lineString.Trim();
+
+                var startofParen = lineString.IndexOf("(");
+                var endofParen = lineString.IndexOf(")");
+
+                if(startofParen == -1 || endofParen == -1)
+                {
+                    break;
+                }
+
+                //Get Product SKU
+                var productSku = lineString.Substring(startofParen + 1, endofParen - startofParen - 1).Trim();
+                productSku = productSku.Replace("_", "-");
+
+                //Get Quanitty
+                var indexOfFirstSpace = lineString.IndexOf(" ");
+                var productQuantity = int.Parse(lineString.Substring(0, indexOfFirstSpace));
+
+                //Get Price
+                var lastIndexOfSpace = lineString.LastIndexOf(" ");
+                var productPrice = decimal.Parse(lineString.Substring(lastIndexOfSpace).Replace("$", ""));
+
+                poLineItems.Add(new POLineItem
+                {
+                    SKU = productSku,
+                    Quantity = productQuantity,
+                    ProductDescription = products[productSku],
+                    Price = productPrice
+                });
+            }           
+
+            return poLineItems;
         }
 
         private zCush.Common.Dtos.Address ExtractAddressFromEmail(string wayfairEmailBody)

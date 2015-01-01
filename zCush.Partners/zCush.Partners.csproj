@@ -125,6 +125,7 @@
     <Compile Include="Amazon\AmazonService.cs" />
     <Compile Include="Amazon\AmazonWarehouse.cs" />
     <Compile Include="Amazon\AmazonWarehouses.cs" />
+    <Compile Include="CustomerType.cs" />
     <Compile Include="PayPal\PayPalConfiguration.cs" />
     <Compile Include="PayPal\PayPalService.cs" />
     <Compile Include="Products.cs" />

@@ -15,15 +15,7 @@
           <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="State" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ZipCode" Type="nvarchar" MaxLength="20" Nullable="false" />
-        </EntityType>
-        <EntityType Name="BusinessCustomer">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="AddressId" Type="int" Nullable="false" />
-          <Property Name="ContactId" Type="int" Nullable="false" />
-          <Property Name="BusinessName" Type="int" />
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="CarrierType">
           <Key>
@@ -43,6 +35,23 @@
           <Property Name="CellPhone" Type="nvarchar" MaxLength="15" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="AddressId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -102,25 +111,37 @@
         </EntityType>
         <Association Name="FK_BusinessCustomer_0">
           <End Role="Address" Type="Self.Address" Multiplicity="1" />
-          <End Role="BusinessCustomer" Type="Self.BusinessCustomer" Multiplicity="*" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Address">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="BusinessCustomer">
+            <Dependent Role="Customer">
               <PropertyRef Name="AddressId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BusinessCustomer_1">
           <End Role="Contact" Type="Self.Contact" Multiplicity="1" />
-          <End Role="BusinessCustomer" Type="Self.BusinessCustomer" Multiplicity="*" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Contact">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="BusinessCustomer">
+            <Dependent Role="Customer">
               <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_0">
+          <End Role="CustomerType" Type="Self.CustomerType" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="CustomerTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -149,10 +170,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PurchaseOrder_1">
-          <End Role="BusinessCustomer" Type="Self.BusinessCustomer" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="BusinessCustomer">
+            <Principal Role="Customer">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Order">
@@ -198,9 +219,10 @@
         </Association>
         <EntityContainer Name="zCushModelStoreContainer">
           <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="BusinessCustomer" EntityType="Self.BusinessCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CarrierType" EntityType="Self.CarrierType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerType" EntityType="Self.CustomerType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderLineItem" EntityType="Self.OrderLineItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderStatus" EntityType="Self.OrderStatus" Schema="dbo" store:Type="Tables" />
@@ -209,11 +231,15 @@
           <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BusinessCustomer_0" Association="Self.FK_BusinessCustomer_0">
             <End Role="Address" EntitySet="Address" />
-            <End Role="BusinessCustomer" EntitySet="BusinessCustomer" />
+            <End Role="Customer" EntitySet="Customer" />
           </AssociationSet>
           <AssociationSet Name="FK_BusinessCustomer_1" Association="Self.FK_BusinessCustomer_1">
             <End Role="Contact" EntitySet="Contact" />
-            <End Role="BusinessCustomer" EntitySet="BusinessCustomer" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_0" Association="Self.FK_Customer_0">
+            <End Role="CustomerType" EntitySet="CustomerType" />
+            <End Role="Customer" EntitySet="Customer" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_0" Association="Self.FK_Order_0">
             <End Role="OrderStatus" EntitySet="OrderStatus" />
@@ -224,7 +250,7 @@
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
           <AssociationSet Name="FK_PurchaseOrder_1" Association="Self.FK_PurchaseOrder_1">
-            <End Role="BusinessCustomer" EntitySet="BusinessCustomer" />
+            <End Role="Customer" EntitySet="Customer" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
           <AssociationSet Name="FK_PurchaseOrderLineItem_0" Association="Self.FK_PurchaseOrderLineItem_0">
@@ -256,27 +282,14 @@
         <EntityContainer Name="zCushEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="Addresses" EntityType="zCushModel.Address" />
-          <EntitySet Name="BusinessCustomers" EntityType="zCushModel.BusinessCustomer" />
           <EntitySet Name="CarrierTypes" EntityType="zCushModel.CarrierType" />
           <EntitySet Name="Contacts" EntityType="zCushModel.Contact" />
           <EntitySet Name="Orders" EntityType="zCushModel.Order" />
           <EntitySet Name="OrderLineItems" EntityType="zCushModel.OrderLineItem" />
           <EntitySet Name="OrderStatus" EntityType="zCushModel.OrderStatu" />
           <EntitySet Name="Shipments" EntityType="zCushModel.Shipment" />
-          <AssociationSet Name="FK_BusinessCustomer_0" Association="zCushModel.FK_BusinessCustomer_0">
-            <End Role="Address" EntitySet="Addresses" />
-            <End Role="BusinessCustomer" EntitySet="BusinessCustomers" />
-          </AssociationSet>
           <AssociationSet Name="FK_PurchaseOrder_0" Association="zCushModel.FK_PurchaseOrder_0">
             <End Role="Address" EntitySet="Addresses" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BusinessCustomer_1" Association="zCushModel.FK_BusinessCustomer_1">
-            <End Role="Contact" EntitySet="Contacts" />
-            <End Role="BusinessCustomer" EntitySet="BusinessCustomers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PurchaseOrder_1" Association="zCushModel.FK_PurchaseOrder_1">
-            <End Role="BusinessCustomer" EntitySet="BusinessCustomers" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_0" Association="zCushModel.FK_Order_0">
@@ -296,6 +309,24 @@
             <End Role="Address" EntitySet="Addresses" />
             <End Role="Ref_AmazonWarehouse" EntitySet="Ref_AmazonWarehouse" />
           </AssociationSet>
+          <EntitySet Name="Customers" EntityType="zCushModel.Customer" />
+          <EntitySet Name="CustomerTypes" EntityType="zCushModel.CustomerType" />
+          <AssociationSet Name="FK_BusinessCustomer_01" Association="zCushModel.FK_BusinessCustomer_01">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessCustomer_11" Association="zCushModel.FK_BusinessCustomer_11">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_0" Association="zCushModel.FK_Customer_0">
+            <End Role="CustomerType" EntitySet="CustomerTypes" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrder_11" Association="zCushModel.FK_PurchaseOrder_11">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -307,21 +338,10 @@
           <Property Name="City" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="BusinessCustomers" Relationship="zCushModel.FK_BusinessCustomer_0" FromRole="Address" ToRole="BusinessCustomer" />
           <NavigationProperty Name="Orders" Relationship="zCushModel.FK_PurchaseOrder_0" FromRole="Address" ToRole="Order" />
           <NavigationProperty Name="Ref_AmazonWarehouse" Relationship="zCushModel.FK_Ref_AmazonWarehouse_0" FromRole="Address" ToRole="Ref_AmazonWarehouse" />
-        </EntityType>
-        <EntityType Name="BusinessCustomer">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="AddressId" Type="Int32" Nullable="false" />
-          <Property Name="ContactId" Type="Int32" Nullable="false" />
-          <Property Name="BusinessName" Type="Int32" />
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Address" Relationship="zCushModel.FK_BusinessCustomer_0" FromRole="BusinessCustomer" ToRole="Address" />
-          <NavigationProperty Name="Contact" Relationship="zCushModel.FK_BusinessCustomer_1" FromRole="BusinessCustomer" ToRole="Contact" />
-          <NavigationProperty Name="Orders" Relationship="zCushModel.FK_PurchaseOrder_1" FromRole="BusinessCustomer" ToRole="Order" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customers" Relationship="zCushModel.FK_BusinessCustomer_01" FromRole="Address" ToRole="Customer" />
         </EntityType>
         <EntityType Name="CarrierType">
           <Key>
@@ -341,7 +361,7 @@
           <Property Name="CellPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="BusinessCustomers" Relationship="zCushModel.FK_BusinessCustomer_1" FromRole="Contact" ToRole="BusinessCustomer" />
+          <NavigationProperty Name="Customers" Relationship="zCushModel.FK_BusinessCustomer_11" FromRole="Contact" ToRole="Customer" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -354,9 +374,9 @@
           <Property Name="PODate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OrderStatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Address" Relationship="zCushModel.FK_PurchaseOrder_0" FromRole="Order" ToRole="Address" />
-          <NavigationProperty Name="BusinessCustomer" Relationship="zCushModel.FK_PurchaseOrder_1" FromRole="Order" ToRole="BusinessCustomer" />
           <NavigationProperty Name="OrderStatu" Relationship="zCushModel.FK_Order_0" FromRole="Order" ToRole="OrderStatu" />
           <NavigationProperty Name="OrderLineItems" Relationship="zCushModel.FK_PurchaseOrderLineItem_0" FromRole="Order" ToRole="OrderLineItem" />
+          <NavigationProperty Name="Customer" Relationship="zCushModel.FK_PurchaseOrder_11" FromRole="Order" ToRole="Customer" />
         </EntityType>
         <EntityType Name="OrderLineItem">
           <Key>
@@ -387,18 +407,6 @@
           <Property Name="CarrierTypeId" Type="Int32" Nullable="false" />
           <Property Name="TrackingNumber" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
         </EntityType>
-        <Association Name="FK_BusinessCustomer_0">
-          <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
-          <End Type="zCushModel.BusinessCustomer" Role="BusinessCustomer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BusinessCustomer">
-              <PropertyRef Name="AddressId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PurchaseOrder_0">
           <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
           <End Type="zCushModel.Order" Role="Order" Multiplicity="*" />
@@ -408,30 +416,6 @@
             </Principal>
             <Dependent Role="Order">
               <PropertyRef Name="AddressId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BusinessCustomer_1">
-          <End Type="zCushModel.Contact" Role="Contact" Multiplicity="1" />
-          <End Type="zCushModel.BusinessCustomer" Role="BusinessCustomer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Contact">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BusinessCustomer">
-              <PropertyRef Name="ContactId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PurchaseOrder_1">
-          <End Type="zCushModel.BusinessCustomer" Role="BusinessCustomer" Multiplicity="1" />
-          <End Type="zCushModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BusinessCustomer">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="BusinessCustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -495,6 +479,76 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="AddressId" Type="Int32" Nullable="false" />
+          <Property Name="ContactId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="zCushModel.FK_BusinessCustomer_01" FromRole="Customer" ToRole="Address" />
+          <NavigationProperty Name="Contact" Relationship="zCushModel.FK_BusinessCustomer_11" FromRole="Customer" ToRole="Contact" />
+          <NavigationProperty Name="CustomerType" Relationship="zCushModel.FK_Customer_0" FromRole="Customer" ToRole="CustomerType" />
+          <NavigationProperty Name="Orders" Relationship="zCushModel.FK_PurchaseOrder_11" FromRole="Customer" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="CustomerType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customers" Relationship="zCushModel.FK_Customer_0" FromRole="CustomerType" ToRole="Customer" />
+        </EntityType>
+        <Association Name="FK_BusinessCustomer_01">
+          <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
+          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessCustomer_11">
+          <End Type="zCushModel.Contact" Role="Contact" Multiplicity="1" />
+          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_0">
+          <End Type="zCushModel.CustomerType" Role="CustomerType" Multiplicity="1" />
+          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="CustomerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrder_11">
+          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="zCushModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="BusinessCustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -513,22 +567,13 @@
           <EntitySetMapping Name="Addresses">
             <EntityTypeMapping TypeName="zCushModel.Address">
               <MappingFragment StoreEntitySet="Address">
+                <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
                 <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="City" ColumnName="City" />
                 <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
                 <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BusinessCustomers">
-            <EntityTypeMapping TypeName="zCushModel.BusinessCustomer">
-              <MappingFragment StoreEntitySet="BusinessCustomer">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="BusinessName" ColumnName="BusinessName" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -602,6 +647,25 @@
                 <ScalarProperty Name="CartonQtySanCode" ColumnName="CartonQtySanCode" />
                 <ScalarProperty Name="SanCode" ColumnName="SanCode" />
                 <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="zCushModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTypes">
+            <EntityTypeMapping TypeName="zCushModel.CustomerType">
+              <MappingFragment StoreEntitySet="CustomerType">
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

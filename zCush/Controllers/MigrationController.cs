@@ -30,7 +30,8 @@ namespace zCush.Controllers
                         AddressLine2 = aw.AddressLine2,
                         City = aw.City,
                         State = aw.State,
-                        ZipCode = aw.ZipCode
+                        ZipCode = aw.ZipCode, 
+                        Country = "US"
                     }
                 };
 
