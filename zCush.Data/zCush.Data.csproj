@@ -73,6 +73,9 @@
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ref_AmazonWarehouse.cs">
+      <DependentUpon>zCushContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Shipment.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>

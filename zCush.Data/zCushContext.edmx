@@ -80,6 +80,17 @@
           <Property Name="SKU" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
+        <EntityType Name="Ref_AmazonWarehouse">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Identifier" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="SanCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="CartonQtySanCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddressId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Shipment">
           <Key>
             <PropertyRef Name="ID" />
@@ -173,6 +184,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Ref_AmazonWarehouse_0">
+          <End Role="Address" Type="Self.Address" Multiplicity="1" />
+          <End Role="Ref_AmazonWarehouse" Type="Self.Ref_AmazonWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Ref_AmazonWarehouse">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="zCushModelStoreContainer">
           <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessCustomer" EntityType="Self.BusinessCustomer" Schema="dbo" store:Type="Tables" />
@@ -182,6 +205,7 @@
           <EntitySet Name="OrderLineItem" EntityType="Self.OrderLineItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderStatus" EntityType="Self.OrderStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ref_AmazonWarehouse" EntityType="Self.Ref_AmazonWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BusinessCustomer_0" Association="Self.FK_BusinessCustomer_0">
             <End Role="Address" EntitySet="Address" />
@@ -210,6 +234,10 @@
           <AssociationSet Name="FK_PurchaseOrderLineItem_1" Association="Self.FK_PurchaseOrderLineItem_1">
             <End Role="Product" EntitySet="Product" />
             <End Role="OrderLineItem" EntitySet="OrderLineItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ref_AmazonWarehouse_0" Association="Self.FK_Ref_AmazonWarehouse_0">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="Ref_AmazonWarehouse" EntitySet="Ref_AmazonWarehouse" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -263,6 +291,11 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderLineItem" EntitySet="OrderLineItems" />
           </AssociationSet>
+          <EntitySet Name="Ref_AmazonWarehouse" EntityType="zCushModel.Ref_AmazonWarehouse" />
+          <AssociationSet Name="FK_Ref_AmazonWarehouse_0" Association="zCushModel.FK_Ref_AmazonWarehouse_0">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Ref_AmazonWarehouse" EntitySet="Ref_AmazonWarehouse" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Address">
           <Key>
@@ -276,6 +309,7 @@
           <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BusinessCustomers" Relationship="zCushModel.FK_BusinessCustomer_0" FromRole="Address" ToRole="BusinessCustomer" />
           <NavigationProperty Name="Orders" Relationship="zCushModel.FK_PurchaseOrder_0" FromRole="Address" ToRole="Order" />
+          <NavigationProperty Name="Ref_AmazonWarehouse" Relationship="zCushModel.FK_Ref_AmazonWarehouse_0" FromRole="Address" ToRole="Ref_AmazonWarehouse" />
         </EntityType>
         <EntityType Name="BusinessCustomer">
           <Key>
@@ -437,6 +471,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Ref_AmazonWarehouse">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Identifier" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SanCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CartonQtySanCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="zCushModel.FK_Ref_AmazonWarehouse_0" FromRole="Ref_AmazonWarehouse" ToRole="Address" />
+        </EntityType>
+        <Association Name="FK_Ref_AmazonWarehouse_0">
+          <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
+          <End Type="zCushModel.Ref_AmazonWarehouse" Role="Ref_AmazonWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Ref_AmazonWarehouse">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -532,6 +590,18 @@
                 <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
                 <ScalarProperty Name="CarrierTypeId" ColumnName="CarrierTypeId" />
                 <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ref_AmazonWarehouse">
+            <EntityTypeMapping TypeName="zCushModel.Ref_AmazonWarehouse">
+              <MappingFragment StoreEntitySet="Ref_AmazonWarehouse">
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CartonQtySanCode" ColumnName="CartonQtySanCode" />
+                <ScalarProperty Name="SanCode" ColumnName="SanCode" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

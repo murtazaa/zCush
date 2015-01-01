@@ -81,6 +81,6 @@ namespace zCush.Controllers
             var emails = es.GetAllEmailsOn(DateTime.Today.AddDays(-1));
 
             return View("~/Views/Home/zCushEmails.cshtml", emails);
-        }
+        }        
     }
 }

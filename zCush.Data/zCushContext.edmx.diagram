@@ -21,6 +21,8 @@
         <AssociationConnector Association="zCushModel.FK_Order_0" />
         <AssociationConnector Association="zCushModel.FK_PurchaseOrderLineItem_0" />
         <AssociationConnector Association="zCushModel.FK_PurchaseOrderLineItem_1" />
+        <EntityTypeShape EntityType="zCushModel.Ref_AmazonWarehouse" Width="1.5" PointX="6" PointY="8.375" />
+        <AssociationConnector Association="zCushModel.FK_Ref_AmazonWarehouse_0" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

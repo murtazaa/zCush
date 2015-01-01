@@ -34,5 +34,6 @@ namespace zCush.Data
         public virtual DbSet<OrderLineItem> OrderLineItems { get; set; }
         public virtual DbSet<OrderStatu> OrderStatus { get; set; }
         public virtual DbSet<Shipment> Shipments { get; set; }
+        public virtual DbSet<Ref_AmazonWarehouse> Ref_AmazonWarehouse { get; set; }
     }
 }

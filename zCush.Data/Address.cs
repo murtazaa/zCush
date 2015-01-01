@@ -18,6 +18,7 @@ namespace zCush.Data
         {
             this.BusinessCustomers = new HashSet<BusinessCustomer>();
             this.Orders = new HashSet<Order>();
+            this.Ref_AmazonWarehouse = new HashSet<Ref_AmazonWarehouse>();
         }
     
         public int ID { get; set; }
@@ -29,5 +30,6 @@ namespace zCush.Data
     
         public virtual ICollection<BusinessCustomer> BusinessCustomers { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Ref_AmazonWarehouse> Ref_AmazonWarehouse { get; set; }
     }
 }
