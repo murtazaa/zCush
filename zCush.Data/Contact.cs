@@ -12,17 +12,21 @@ namespace zCush.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Product
+    public partial class Contact
     {
-        public Product()
+        public Contact()
         {
-            this.OrderLineItems = new HashSet<OrderLineItem>();
+            this.BusinessCustomers = new HashSet<BusinessCustomer>();
         }
     
+        public string FirstName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Fax { get; set; }
+        public string CellPhone { get; set; }
+        public string LastName { get; set; }
         public int ID { get; set; }
-        public string SKU { get; set; }
-        public string Name { get; set; }
     
-        public virtual ICollection<OrderLineItem> OrderLineItems { get; set; }
+        public virtual ICollection<BusinessCustomer> BusinessCustomers { get; set; }
     }
 }

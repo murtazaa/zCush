@@ -26,5 +26,13 @@ namespace zCush.Data
         }
     
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<BusinessCustomer> BusinessCustomers { get; set; }
+        public virtual DbSet<CarrierType> CarrierTypes { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderLineItem> OrderLineItems { get; set; }
+        public virtual DbSet<OrderStatu> OrderStatus { get; set; }
+        public virtual DbSet<Shipment> Shipments { get; set; }
     }
 }
