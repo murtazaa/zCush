@@ -1,5 +1,4 @@
-﻿using LinqToExcel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,11 +10,12 @@ namespace zCush.Partners.Amazon
     {
         public static List<AmazonWarehouse> GetAllAmazonWarehouseAddresses()
         {
-            var excel = new ExcelQueryFactory(@"C:\zCush\Amazon\AmazonWarehouseAddress.xlsx");
-            var amazonWarehouses = from c in excel.Worksheet<AmazonWarehouse>("AmazonWarehouses")
-                                   select c;
+            //var excel = new ExcelQueryFactory(@"C:\zCush\Amazon\AmazonWarehouseAddress.xlsx");
+            //var amazonWarehouses = from c in excel.Worksheet<AmazonWarehouse>("AmazonWarehouses")
+            //                       select c;
 
-            return amazonWarehouses.ToList();
+            //return amazonWarehouses.ToList();
+            return new List<AmazonWarehouse>();
         }
     }
 }
