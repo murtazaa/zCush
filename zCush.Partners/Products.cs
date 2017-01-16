@@ -56,7 +56,7 @@ namespace zCush.Partners
 
             products.Add(new Product
             {
-                SKU = "BNM-MC-HP=RF",
+                SKU = "BNM-MC-HP-RF",
                 Description = "Berry Beginning Nap Mat"
             });
 
@@ -76,6 +76,12 @@ namespace zCush.Partners
             {
                 SKU = "BNM-MC-WH-RF",
                 Description = "Whimsical White Nap Mat"
+            });
+
+            products.Add(new Product
+            {
+                SKU = "BNMC-CT-YL-OW",
+                Description = "Happy Hoot Nap Mat Cover"
             });
 
             return products;

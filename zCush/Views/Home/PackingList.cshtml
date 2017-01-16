@@ -1,0 +1,114 @@
+﻿@model zCush.Partners.PurchaseOrder
+
+<img src="~/Assets/Images/zCush_Logo.gif" />
+
+<h2>Packing List</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PONumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PODate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th></th>
+    </tr>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.PONumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.PODate)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Total)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <h4>Ship To:</h4>
+                <table>
+                    <tr>
+                        <td><b>ContactName : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.ContactName)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Address Line 1 : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.AddressLine1)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Address Line 2 : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.AddressLine2)</td>
+                    </tr>
+                    <tr>
+                        <td><b>City : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.City)</td>
+                    </tr>
+                    <tr>
+                        <td><b>State : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.State)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Zip Code : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.ZipCode)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Raw Address Text : </b></td>
+                        <td>@Html.DisplayFor(model => model.ShipAddress.RawAddress)</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th>
+                            SKU
+                        </th>
+                        <th>
+                            Product Description
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th></th>
+                    </tr>
+                    @foreach (var poItem in Model.POLineItems)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(poLineItem => poItem.SKU)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(poLineItem => poItem.ProductDescription)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(poLineItem => poItem.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(poLineItem => poItem.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(poLineItem => poItem.LineItemTotal)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

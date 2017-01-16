@@ -17,7 +17,7 @@ namespace zCush.Partners.WayFair
         {
             var wayFairPos = new List<PurchaseOrder>();
             var es = new EmailService();
-            var emails = es.GetAllEmailsOn(DateTime.Today.AddDays(-2).AddHours(6));
+            var emails = es.GetAllEmailsOn(DateTime.Today.AddDays(-3));
 
             foreach (var email in emails)
             {
@@ -32,12 +32,13 @@ namespace zCush.Partners.WayFair
                     {
                         PONumber = PoNumber,
                         ShipAddress = ShipToAddress,
-                        POLineItems = poLineItems
+                        POLineItems = poLineItems, 
+                        PODate = email.Date
                     };
 
-                    //PrintPackingSlip(email.BodyText.Text);
-                    //var fds = new ShippingService();
-                    //fds.CreateUPSGroundLabel(ShipToAddress, Shipping3PartyAccounts.WayFair, PoNumber);
+                    PrintPackingSlip(email.BodyText.Text);
+                    var fds = new ShippingService();
+                    fds.CreateUPSGroundLabel(ShipToAddress, Shipping3PartyAccounts.WayFair, PoNumber, poLineItems.Sum(pli => pli.Quantity));
 
                     wayFairPos.Add(po);
                 }
@@ -79,10 +80,9 @@ namespace zCush.Partners.WayFair
             var endString = "TOTAL";
             var products = Products.GetAllProducts().ToDictionary(k => k.SKU, v => v.Description);
 
-            var indexOfStart = culture.CompareInfo.IndexOf(wayfairEmailBody, startString, CompareOptions.IgnoreCase);
+            var indexOfStart = culture.CompareInfo.LastIndexOf(wayfairEmailBody, startString, CompareOptions.IgnoreCase);
             var indexOfEnd = culture.CompareInfo.IndexOf(wayfairEmailBody, endString, CompareOptions.IgnoreCase);
-            var rawString = wayfairEmailBody.Substring(indexOfStart + 5, indexOfEnd - indexOfStart - 5);
-
+            var rawString = wayfairEmailBody.Substring(indexOfStart + 17, indexOfEnd - indexOfStart - 17);
 
             //Replace '-'s
             var indexOfFirstLineBreak = rawString.IndexOf("\r\n");
@@ -90,18 +90,20 @@ namespace zCush.Partners.WayFair
             var indexOfSecondLineBreak = rawString.IndexOf("\r\n");
             rawString = rawString.Substring(indexOfSecondLineBreak + 2);
 
-            var numberOfLineItems = rawString.Split("***".ToCharArray());
+            var indexOfTwoLineBreaks = rawString.IndexOf("\r\n\r\n");
 
-            foreach(var lineItemString in numberOfLineItems)
+            while(indexOfTwoLineBreaks != -1)
             {
-                var lineString = lineItemString;
+                var lineString = rawString.Substring(0, indexOfTwoLineBreaks);
+                var indexOfStars = lineString.IndexOf("***");
+                lineString = lineString.Substring(0, indexOfStars);
                 lineString = lineString.Replace("\r\n", "");
                 lineString = lineString.Trim();
 
                 var startofParen = lineString.IndexOf("(");
                 var endofParen = lineString.IndexOf(")");
 
-                if(startofParen == -1 || endofParen == -1)
+                if (startofParen == -1 || endofParen == -1)
                 {
                     break;
                 }
@@ -125,7 +127,47 @@ namespace zCush.Partners.WayFair
                     ProductDescription = products[productSku],
                     Price = productPrice
                 });
-            }           
+
+                rawString = rawString.Substring(indexOfTwoLineBreaks + 4);
+                indexOfTwoLineBreaks = rawString.IndexOf("\r\n\r\n");
+                
+            }
+            //var numberOfLineItems = rawString.Split("\r\n\r\n".ToCharArray());
+
+            //foreach(var lineItemString in numberOfLineItems)
+            //{
+            //    var lineString = lineItemString;
+            //    lineString = lineString.Replace("\r\n", "");
+            //    lineString = lineString.Trim();
+
+            //    var startofParen = lineString.IndexOf("(");
+            //    var endofParen = lineString.IndexOf(")");
+
+            //    if(startofParen == -1 || endofParen == -1)
+            //    {
+            //        break;
+            //    }
+
+            //    //Get Product SKU
+            //    var productSku = lineString.Substring(startofParen + 1, endofParen - startofParen - 1).Trim();
+            //    productSku = productSku.Replace("_", "-");
+
+            //    //Get Quanitty
+            //    var indexOfFirstSpace = lineString.IndexOf(" ");
+            //    var productQuantity = int.Parse(lineString.Substring(0, indexOfFirstSpace));
+
+            //    //Get Price
+            //    var lastIndexOfSpace = lineString.LastIndexOf(" ");
+            //    var productPrice = decimal.Parse(lineString.Substring(lastIndexOfSpace).Replace("$", ""));
+
+            //    poLineItems.Add(new POLineItem
+            //    {
+            //        SKU = productSku,
+            //        Quantity = productQuantity,
+            //        ProductDescription = products[productSku],
+            //        Price = productPrice
+            //    });
+            //}           
 
             return poLineItems;
         }

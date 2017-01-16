@@ -106,7 +106,7 @@ namespace zCush.Partners.WebSite
                 address.ZipCode = parsedAddress.Zip;
 
                 var fds = new ShippingService();
-                fds.CreateFedExLabel(address, Shipping3PartyAccounts.None, "WSOrder");
+                //fds.CreateFedExLabel(address, Shipping3PartyAccounts.None, "WSOrder");
 
             }
             address.RawAddress = rawAddressString;

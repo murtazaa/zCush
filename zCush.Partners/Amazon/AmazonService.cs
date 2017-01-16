@@ -77,7 +77,7 @@ namespace zCush.Partners.Amazon
         {
             var ImapServer = "imap.secureserver.net";
             var userName = "murtaza@zcush.com";
-            var password = "godri786";
+            var password = "godri110";
             var amazonLabelAddresses = new List<AmazonLabelAddresses>();
             var amazomWarehouses = AmazonWarehouses.GetAllAmazonWarehouseAddresses();
             // We create Imap client
@@ -93,16 +93,14 @@ namespace zCush.Partners.Amazon
 
                 Mailbox inbox = imap.SelectMailbox("inbox");
                 var msgCount = inbox.MessageCount;
-
                 if (msgCount > 0)
                 {
                     var newMessage = inbox.Fetch.MessageObject(msgCount--);
-
-                    while (newMessage.ReceivedDate > date)
+                    while (newMessage.Date >= date)
                     {
                         var isAmazonLabelEmail = IsAmazonLabelEmail(newMessage.Subject);
 
-                        if(isAmazonLabelEmail)
+                        if (isAmazonLabelEmail)
                         {
                             var carrier = GetCarrier(newMessage.Subject);
 
@@ -113,7 +111,7 @@ namespace zCush.Partners.Amazon
                             };
                             amazonLabelAddresses.Add(amazonLabelAddress);
                         }
-                        
+
                         newMessage = inbox.Fetch.MessageObject(msgCount--);
                     }
                 }

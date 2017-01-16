@@ -17,7 +17,7 @@ namespace zCush.Services.Email
         {
             var ImapServer = "imap.secureserver.net";
             var userName = "orders@zcush.com";
-            var password = "godri786";
+            var password = "godri110";
             var orderMails = new List<zCushOrderEmail>();
 
             // We create Imap client

@@ -69,7 +69,7 @@
     <Compile Include="OrderLineItem.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="OrderStatu.cs">
+    <Compile Include="OrderStatus.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Product.cs">
@@ -80,6 +80,9 @@
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Shipment.cs">
+      <DependentUpon>zCushContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ThirdPartyShipmentCarrierAccount.cs">
       <DependentUpon>zCushContext.tt</DependentUpon>
     </Compile>
     <Compile Include="zCushContext.Context.cs">

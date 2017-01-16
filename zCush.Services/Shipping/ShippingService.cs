@@ -19,29 +19,37 @@ namespace zCush.Services.Shipping
             get { return "x018Vgs5Jf0b4ouAXXcZCA"; } //Prod Key
         }       
 
-        public void CreateFedExLabel(zCush.Common.Dtos.Address shipToAddress, Shipping3PartyAccounts thirdPartyAccount, string referenceNumber)
+        public void CreateFedExLabel(zCush.Common.Dtos.Address shipToAddress, Shipping3PartyAccounts thirdPartyAccount, string referenceNumber, int qty)
         {
-            var shipment = CreateFedExShipment(shipToAddress, referenceNumber, thirdPartyAccount);
-            var fedExGroudShipmentRate = shipment.rates.First(r => r.carrier == "FedEx" && r.service == "FEDEX_GROUND");
-            BuyAndPrintShipment(shipment, fedExGroudShipmentRate);
+            var shipment = CreateFedExShipment(shipToAddress, referenceNumber, thirdPartyAccount, qty);
+            if (!shipment.messages.Any())
+            {
+                var fedExGroudShipmentRate = shipment.rates.First(r => r.carrier == "FedEx" && r.service == "FEDEX_GROUND");
+                BuyAndPrintShipment(shipment, fedExGroudShipmentRate);
+            }
+            else
+            {
+                //Unable to create a label for this one. 
+            }
+
             //var fedExExpressShipment = shipment.rates.First(r => r.carrier == "FedEx" && r.service == "FEDEX_EXPRESS_SAVER");
         }
 
-        public void CreateUPSGroundLabel(zCush.Common.Dtos.Address shipToAddress, Shipping3PartyAccounts accountType, string referenceNumber)
+        public void CreateUPSGroundLabel(zCush.Common.Dtos.Address shipToAddress, Shipping3PartyAccounts accountType, string referenceNumber, int qty)
         {
-            var shipment = CreateUPSShipment(shipToAddress, referenceNumber, accountType);
+            var shipment = CreateUPSShipment(shipToAddress, referenceNumber, accountType, qty);
             var upsGroundShipmentRate = shipment.rates.First(r => r.carrier == "UPS" && r.service == "Ground");
             BuyAndPrintShipment(shipment, upsGroundShipmentRate);            
         }
 
-        private Shipment CreateUPSShipment(zCush.Common.Dtos.Address shipToAddress, string referenceNumber, Shipping3PartyAccounts accontyType)
+        private Shipment CreateUPSShipment(zCush.Common.Dtos.Address shipToAddress, string referenceNumber, Shipping3PartyAccounts accontyType, int qty)
         {
             Client.apiKey = ClientKey;
 
             Dictionary<string, object> fromAddress = new Dictionary<string, object>() {
                 {"company", "zCush"},
-                {"street1", "936 Jamestown Road"},
-                {"street2", ""},
+                {"street1", "661 Abbington Drive"},
+                {"street2", "G14"},
                 {"city", "East Windsor"},
                 {"state", "NJ"},
                 {"phone", "7324474916"},
@@ -65,7 +73,7 @@ namespace zCush.Services.Shipping
                   {"length", 18},
                   {"width", 12},
                   {"height", 8},
-                  {"weight", 3}}
+                  {"weight", qty * 48}}
                 },
                 {"to_address", toAddress},
                 {"from_address", fromAddress}, 
@@ -81,14 +89,14 @@ namespace zCush.Services.Shipping
             return shipment;
         }
 
-        private Shipment CreateFedExShipment(zCush.Common.Dtos.Address shipToAddress, string referenceNumber, Shipping3PartyAccounts accontyType)
+        private Shipment CreateFedExShipment(zCush.Common.Dtos.Address shipToAddress, string referenceNumber, Shipping3PartyAccounts accontyType, int qty)
         {
             Client.apiKey = ClientKey;
 
             Dictionary<string, object> fromAddress = new Dictionary<string, object>() {
                 {"company", "zCush"},
-                {"street1", "936 Jamestown Road"},
-                {"street2", ""},
+                {"street1", "661 Abbington Drive"},
+                {"street2", "G14"},
                 {"city", "East Windsor"},
                 {"state", "NJ"},
                 {"phone", "7324474916"},
@@ -111,7 +119,7 @@ namespace zCush.Services.Shipping
                       {"length", 18},
                       {"width", 12},
                       {"height", 8},
-                      {"weight", 3}}
+                      {"weight", qty * 48}}
                     },
                     {"to_address", toAddress},
                     {"from_address", fromAddress}

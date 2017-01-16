@@ -56,6 +56,13 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlRenderer, Version=1.5.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\HtmlRenderer.Core.1.5.0.5\lib\net45\HtmlRenderer.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlRenderer.WinForms">
+      <HintPath>..\libs\HtmlRenderer.WinForms.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp">
       <HintPath>..\packages\iTextSharp.5.5.4\lib\itextsharp.dll</HintPath>
     </Reference>
@@ -88,6 +95,9 @@
     <Reference Include="PayPalMerchantSDK, Version=2.13.117.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\PayPalMerchantSDK.2.13.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\libs\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="Remotion">
       <HintPath>..\packages\LinqToExcel.1.10.1\lib\Remotion.dll</HintPath>
@@ -206,11 +216,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Assets\Images\zCush_Logo.gif" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="ProcessOrder.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -253,6 +265,7 @@
     <Content Include="Views\Home\zCushEmails.cshtml" />
     <Content Include="Views\Home\AmazonLabelAddresses.cshtml" />
     <Content Include="Views\Home\Products.cshtml" />
+    <Content Include="Views\Home\PackingList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\zCush.Common\zCush.Common.csproj">

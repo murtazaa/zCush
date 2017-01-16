@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\Address.cs" />
+    <Compile Include="Enums\BusinessCustomerName.cs" />
+    <Compile Include="Enums\OrderStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

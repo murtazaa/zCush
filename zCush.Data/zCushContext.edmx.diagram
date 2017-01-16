@@ -4,27 +4,28 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="519ef09f5f634b12be442590632fcc43" Name="Diagram1">
-        <EntityTypeShape EntityType="zCushModel.Product" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="zCushModel.Address" Width="1.5" PointX="3.75" PointY="1.125" />
-        <EntityTypeShape EntityType="zCushModel.CarrierType" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="zCushModel.Contact" Width="1.5" PointX="3.25" PointY="4.75" />
-        <EntityTypeShape EntityType="zCushModel.Order" Width="1.5" PointX="8.25" PointY="1" />
-        <EntityTypeShape EntityType="zCushModel.OrderLineItem" Width="1.5" PointX="10.5" PointY="1.125" />
-        <EntityTypeShape EntityType="zCushModel.OrderStatu" Width="1.5" PointX="6" PointY="5.625" />
-        <EntityTypeShape EntityType="zCushModel.Shipment" Width="1.5" PointX="0.75" PointY="6.75" />
-        <AssociationConnector Association="zCushModel.FK_PurchaseOrder_0" />
-        <AssociationConnector Association="zCushModel.FK_Order_0" />
-        <AssociationConnector Association="zCushModel.FK_PurchaseOrderLineItem_0" />
-        <AssociationConnector Association="zCushModel.FK_PurchaseOrderLineItem_1" />
-        <EntityTypeShape EntityType="zCushModel.Ref_AmazonWarehouse" Width="1.5" PointX="6" PointY="8.375" />
-        <AssociationConnector Association="zCushModel.FK_Ref_AmazonWarehouse_0" />
-        <EntityTypeShape EntityType="zCushModel.Customer" Width="1.5" PointX="9" PointY="5" />
-        <EntityTypeShape EntityType="zCushModel.CustomerType" Width="1.5" PointX="6.75" PointY="11.5" />
-        <AssociationConnector Association="zCushModel.FK_BusinessCustomer_01" />
-        <AssociationConnector Association="zCushModel.FK_BusinessCustomer_11" />
-        <AssociationConnector Association="zCushModel.FK_Customer_0" />
-        <AssociationConnector Association="zCushModel.FK_PurchaseOrder_11" />
+      <Diagram DiagramId="2e71a78dc9d64ba39c13e45af62af68e" Name="Diagram1">
+        <EntityTypeShape EntityType="zCushModel.Address" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.CarrierType" Width="1.5" PointX="5.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.Contact" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.Customer" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.CustomerType" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.Order" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.OrderLineItem" Width="1.5" PointX="7.5" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.OrderStatus" Width="1.5" PointX="3" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.Product" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.Ref_AmazonWarehouse" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.Shipment" Width="1.5" PointX="7.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="zCushModel.ThirdPartyShipmentCarrierAccount" Width="1.5" PointX="9.75" PointY="2.25" IsExpanded="true" />
+        <AssociationConnector Association="zCushModel.FK_BusinessCustomer_0" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_PurchaseOrder_0" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_Ref_AmazonWarehouse_0" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_BusinessCustomer_1" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_Customer_0" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_PurchaseOrder_1" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_Order_0" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_PurchaseOrderLineItem_0" ManuallyRouted="false" />
+        <AssociationConnector Association="zCushModel.FK_PurchaseOrderLineItem_1" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

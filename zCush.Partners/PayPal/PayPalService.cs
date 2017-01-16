@@ -75,10 +75,11 @@ namespace zCush.Partners.PayPal
         public List<PurchaseOrder> GetPayPalOrders()
         {
             var PPPos = new List<PurchaseOrder>();
-            var payPalTransactions = TransactionSearchAPIOperation().PaymentTransactions.Where(pt => pt.Status == "Completed");
+            var payPalTransactions = TransactionSearchAPIOperation().PaymentTransactions.Where(pt => pt.Status == "Completed" && pt.Type != "Refund" && pt.Status != "Fee Reversal");
             var products = Products.GetAllProducts().ToDictionary(k => k.Description, v => v.SKU);
             foreach(var ppt in payPalTransactions)
             {
+                var transacitonDate = DateTime.Parse(ppt.Timestamp);
                 var pptDetails = GetTransactionDetails(ppt.TransactionID);
                 var shipToAddress = GetAddress(pptDetails.PaymentTransactionDetails.PayerInfo.Address);
                 var purchaseOrder = new PurchaseOrder
@@ -90,8 +91,8 @@ namespace zCush.Partners.PayPal
                 foreach(var paymentItem in  pptDetails.PaymentTransactionDetails.PaymentItemInfo.PaymentItem)
                 {
                     if (paymentItem.Name != null &&
-                       paymentItem.Amount.value != null &&
-                       paymentItem.Quantity != null)
+                        paymentItem.Amount.value != null &&
+                        paymentItem.Quantity != null)
                     {
                         purchaseOrder.POLineItems.Add(new POLineItem
                         {
@@ -103,7 +104,7 @@ namespace zCush.Partners.PayPal
                 }
 
                 var ss = new ShippingService();
-                ss.CreateFedExLabel(shipToAddress, Shipping3PartyAccounts.None, ppt.TransactionID);
+                ss.CreateFedExLabel(shipToAddress, Shipping3PartyAccounts.None, ppt.TransactionID, purchaseOrder.POLineItems.Sum(pli => pli.Quantity));
 
                 if (purchaseOrder.POLineItems.Any())
                 {
@@ -130,7 +131,7 @@ namespace zCush.Partners.PayPal
                 // 
                 // * `Start Date` - The earliest transaction date at which to start the
                 // search.
-                var transactionSearchRequest = new TransactionSearchRequestType("2014-12-29T00:00:00+0530");
+                var transactionSearchRequest = new TransactionSearchRequestType("2015-03-27T00:00:00+0530");
                 requestTransactionSearch.TransactionSearchRequest = transactionSearchRequest;
 
                 // Create the service wrapper object to make the API call

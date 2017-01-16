@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="zCushModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="zCushModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="ID" />
@@ -35,6 +35,8 @@
           <Property Name="CellPhone" Type="nvarchar" MaxLength="15" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="30" />
+          <Property Name="Department" Type="nvarchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -59,7 +61,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PONumber" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="BusinessCustomerId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
           <Property Name="AddressId" Type="int" Nullable="false" />
           <Property Name="PODate" Type="datetime" Nullable="false" />
           <Property Name="OrderStatusId" Type="int" Nullable="false" />
@@ -108,6 +110,17 @@
           <Property Name="PurchaseOrderId" Type="int" Nullable="false" />
           <Property Name="CarrierTypeId" Type="int" Nullable="false" />
           <Property Name="TrackingNumber" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThirdPartyShipmentCarrierAccount">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="CarrierTypeId" Type="int" Nullable="false" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="Country" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <Association Name="FK_BusinessCustomer_0">
           <End Role="Address" Type="Self.Address" Multiplicity="1" />
@@ -177,7 +190,7 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Order">
-              <PropertyRef Name="BusinessCustomerId" />
+              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -229,6 +242,7 @@
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ref_AmazonWarehouse" EntityType="Self.Ref_AmazonWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThirdPartyShipmentCarrierAccount" EntityType="Self.ThirdPartyShipmentCarrierAccount" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BusinessCustomer_0" Association="Self.FK_BusinessCustomer_0">
             <End Role="Address" EntitySet="Address" />
             <End Role="Customer" EntitySet="Customer" />
@@ -266,219 +280,48 @@
             <End Role="Ref_AmazonWarehouse" EntitySet="Ref_AmazonWarehouse" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="zCushModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SKU" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="OrderLineItems" Relationship="zCushModel.FK_PurchaseOrderLineItem_1" FromRole="Product" ToRole="OrderLineItem" />
-        </EntityType>
-        <EntityContainer Name="zCushEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Products" EntityType="Self.Product" />
-          <EntitySet Name="Addresses" EntityType="zCushModel.Address" />
-          <EntitySet Name="CarrierTypes" EntityType="zCushModel.CarrierType" />
-          <EntitySet Name="Contacts" EntityType="zCushModel.Contact" />
-          <EntitySet Name="Orders" EntityType="zCushModel.Order" />
-          <EntitySet Name="OrderLineItems" EntityType="zCushModel.OrderLineItem" />
-          <EntitySet Name="OrderStatus" EntityType="zCushModel.OrderStatu" />
-          <EntitySet Name="Shipments" EntityType="zCushModel.Shipment" />
-          <AssociationSet Name="FK_PurchaseOrder_0" Association="zCushModel.FK_PurchaseOrder_0">
-            <End Role="Address" EntitySet="Addresses" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Order_0" Association="zCushModel.FK_Order_0">
-            <End Role="OrderStatu" EntitySet="OrderStatus" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PurchaseOrderLineItem_0" Association="zCushModel.FK_PurchaseOrderLineItem_0">
-            <End Role="Order" EntitySet="Orders" />
-            <End Role="OrderLineItem" EntitySet="OrderLineItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PurchaseOrderLineItem_1" Association="zCushModel.FK_PurchaseOrderLineItem_1">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="OrderLineItem" EntitySet="OrderLineItems" />
-          </AssociationSet>
-          <EntitySet Name="Ref_AmazonWarehouse" EntityType="zCushModel.Ref_AmazonWarehouse" />
-          <AssociationSet Name="FK_Ref_AmazonWarehouse_0" Association="zCushModel.FK_Ref_AmazonWarehouse_0">
-            <End Role="Address" EntitySet="Addresses" />
-            <End Role="Ref_AmazonWarehouse" EntitySet="Ref_AmazonWarehouse" />
-          </AssociationSet>
-          <EntitySet Name="Customers" EntityType="zCushModel.Customer" />
-          <EntitySet Name="CustomerTypes" EntityType="zCushModel.CustomerType" />
-          <AssociationSet Name="FK_BusinessCustomer_01" Association="zCushModel.FK_BusinessCustomer_01">
-            <End Role="Address" EntitySet="Addresses" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BusinessCustomer_11" Association="zCushModel.FK_BusinessCustomer_11">
-            <End Role="Contact" EntitySet="Contacts" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Customer_0" Association="zCushModel.FK_Customer_0">
-            <End Role="CustomerType" EntitySet="CustomerTypes" />
-            <End Role="Customer" EntitySet="Customers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PurchaseOrder_11" Association="zCushModel.FK_PurchaseOrder_11">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
-        </EntityContainer>
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="AddressLine2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="zCushModel.FK_PurchaseOrder_0" FromRole="Address" ToRole="Order" />
-          <NavigationProperty Name="Ref_AmazonWarehouse" Relationship="zCushModel.FK_Ref_AmazonWarehouse_0" FromRole="Address" ToRole="Ref_AmazonWarehouse" />
-          <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customers" Relationship="zCushModel.FK_BusinessCustomer_01" FromRole="Address" ToRole="Customer" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_BusinessCustomer_0" FromRole="Address" ToRole="Customer" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_PurchaseOrder_0" FromRole="Address" ToRole="Order" />
+          <NavigationProperty Name="Ref_AmazonWarehouse" Relationship="Self.FK_Ref_AmazonWarehouse_0" FromRole="Address" ToRole="Ref_AmazonWarehouse" />
         </EntityType>
         <EntityType Name="CarrierType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="Fax" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="CellPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Customers" Relationship="zCushModel.FK_BusinessCustomer_11" FromRole="Contact" ToRole="Customer" />
+          <Property Name="Title" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Department" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_BusinessCustomer_1" FromRole="Contact" ToRole="Customer" />
         </EntityType>
-        <EntityType Name="Order">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PONumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="BusinessCustomerId" Type="Int32" Nullable="false" />
-          <Property Name="AddressId" Type="Int32" Nullable="false" />
-          <Property Name="PODate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="OrderStatusId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="zCushModel.FK_PurchaseOrder_0" FromRole="Order" ToRole="Address" />
-          <NavigationProperty Name="OrderStatu" Relationship="zCushModel.FK_Order_0" FromRole="Order" ToRole="OrderStatu" />
-          <NavigationProperty Name="OrderLineItems" Relationship="zCushModel.FK_PurchaseOrderLineItem_0" FromRole="Order" ToRole="OrderLineItem" />
-          <NavigationProperty Name="Customer" Relationship="zCushModel.FK_PurchaseOrder_11" FromRole="Order" ToRole="Customer" />
-        </EntityType>
-        <EntityType Name="OrderLineItem">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderId" Type="Int32" Nullable="false" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Nullable="false" Precision="5" Scale="2" />
-          <NavigationProperty Name="Order" Relationship="zCushModel.FK_PurchaseOrderLineItem_0" FromRole="OrderLineItem" ToRole="Order" />
-          <NavigationProperty Name="Product" Relationship="zCushModel.FK_PurchaseOrderLineItem_1" FromRole="OrderLineItem" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="OrderStatu">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="zCushModel.FK_Order_0" FromRole="OrderStatu" ToRole="Order" />
-        </EntityType>
-        <EntityType Name="Shipment">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PurchaseOrderId" Type="Int32" Nullable="false" />
-          <Property Name="CarrierTypeId" Type="Int32" Nullable="false" />
-          <Property Name="TrackingNumber" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <Association Name="FK_PurchaseOrder_0">
-          <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
-          <End Type="zCushModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="AddressId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Order_0">
-          <End Type="zCushModel.OrderStatu" Role="OrderStatu" Multiplicity="1" />
-          <End Type="zCushModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderStatu">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="OrderStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PurchaseOrderLineItem_0">
-          <End Type="zCushModel.Order" Role="Order" Multiplicity="1" />
-          <End Type="zCushModel.OrderLineItem" Role="OrderLineItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Order">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="OrderLineItem">
-              <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PurchaseOrderLineItem_1">
-          <End Type="zCushModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="zCushModel.OrderLineItem" Role="OrderLineItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="OrderLineItem">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Ref_AmazonWarehouse">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Identifier" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="SanCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="CartonQtySanCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AddressId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="zCushModel.FK_Ref_AmazonWarehouse_0" FromRole="Ref_AmazonWarehouse" ToRole="Address" />
-        </EntityType>
-        <Association Name="FK_Ref_AmazonWarehouse_0">
-          <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
-          <End Type="zCushModel.Ref_AmazonWarehouse" Role="Ref_AmazonWarehouse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Ref_AmazonWarehouse">
-              <PropertyRef Name="AddressId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Customer">
           <Key>
             <PropertyRef Name="ID" />
@@ -488,22 +331,98 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CustomerTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Address" Relationship="zCushModel.FK_BusinessCustomer_01" FromRole="Customer" ToRole="Address" />
-          <NavigationProperty Name="Contact" Relationship="zCushModel.FK_BusinessCustomer_11" FromRole="Customer" ToRole="Contact" />
-          <NavigationProperty Name="CustomerType" Relationship="zCushModel.FK_Customer_0" FromRole="Customer" ToRole="CustomerType" />
-          <NavigationProperty Name="Orders" Relationship="zCushModel.FK_PurchaseOrder_11" FromRole="Customer" ToRole="Order" />
+          <NavigationProperty Name="Address" Relationship="Self.FK_BusinessCustomer_0" FromRole="Customer" ToRole="Address" />
+          <NavigationProperty Name="Contact" Relationship="Self.FK_BusinessCustomer_1" FromRole="Customer" ToRole="Contact" />
+          <NavigationProperty Name="CustomerType" Relationship="Self.FK_Customer_0" FromRole="Customer" ToRole="CustomerType" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_PurchaseOrder_1" FromRole="Customer" ToRole="Order" />
         </EntityType>
         <EntityType Name="CustomerType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customers" Relationship="zCushModel.FK_Customer_0" FromRole="CustomerType" ToRole="Customer" />
+          <Property Name="Type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK_Customer_0" FromRole="CustomerType" ToRole="Customer" />
         </EntityType>
-        <Association Name="FK_BusinessCustomer_01">
-          <End Type="zCushModel.Address" Role="Address" Multiplicity="1" />
-          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="*" />
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PONumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="AddressId" Type="Int32" Nullable="false" />
+          <Property Name="PODate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OrderStatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="Self.FK_PurchaseOrder_0" FromRole="Order" ToRole="Address" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_PurchaseOrder_1" FromRole="Order" ToRole="Customer" />
+          <NavigationProperty Name="OrderStatus" Relationship="Self.FK_Order_0" FromRole="Order" ToRole="OrderStatus" />
+          <NavigationProperty Name="OrderLineItems" Relationship="Self.FK_PurchaseOrderLineItem_0" FromRole="Order" ToRole="OrderLineItem" />
+        </EntityType>
+        <EntityType Name="OrderLineItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_PurchaseOrderLineItem_0" FromRole="OrderLineItem" ToRole="Order" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_PurchaseOrderLineItem_1" FromRole="OrderLineItem" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="OrderStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Order_0" FromRole="OrderStatus" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SKU" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="OrderLineItems" Relationship="Self.FK_PurchaseOrderLineItem_1" FromRole="Product" ToRole="OrderLineItem" />
+        </EntityType>
+        <EntityType Name="Ref_AmazonWarehouse">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Identifier" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SanCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CartonQtySanCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="Self.FK_Ref_AmazonWarehouse_0" FromRole="Ref_AmazonWarehouse" ToRole="Address" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PurchaseOrderId" Type="Int32" Nullable="false" />
+          <Property Name="CarrierTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TrackingNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThirdPartyShipmentCarrierAccount">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="CarrierTypeId" Type="Int32" Nullable="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_BusinessCustomer_0">
+          <End Role="Address" Type="Self.Address" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Address">
               <PropertyRef Name="ID" />
@@ -513,9 +432,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BusinessCustomer_11">
-          <End Type="zCushModel.Contact" Role="Contact" Multiplicity="1" />
-          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="*" />
+        <Association Name="FK_PurchaseOrder_0">
+          <End Role="Address" Type="Self.Address" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ref_AmazonWarehouse_0">
+          <End Role="Address" Type="Self.Address" Multiplicity="1" />
+          <End Role="Ref_AmazonWarehouse" Type="Self.Ref_AmazonWarehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Ref_AmazonWarehouse">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessCustomer_1">
+          <End Role="Contact" Type="Self.Contact" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Contact">
               <PropertyRef Name="ID" />
@@ -526,8 +469,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Customer_0">
-          <End Type="zCushModel.CustomerType" Role="CustomerType" Multiplicity="1" />
-          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="*" />
+          <End Role="CustomerType" Type="Self.CustomerType" Multiplicity="1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CustomerType">
               <PropertyRef Name="ID" />
@@ -537,24 +480,196 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PurchaseOrder_11">
-          <End Type="zCushModel.Customer" Role="Customer" Multiplicity="1" />
-          <End Type="zCushModel.Order" Role="Order" Multiplicity="*" />
+        <Association Name="FK_PurchaseOrder_1">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Customer">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Order">
-              <PropertyRef Name="BusinessCustomerId" />
+              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_0">
+          <End Role="OrderStatus" Type="zCushModel.OrderStatus" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderStatus">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="OrderStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrderLineItem_0">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderLineItem" Type="Self.OrderLineItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrderLineItem">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrderLineItem_1">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderLineItem" Type="Self.OrderLineItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrderLineItem">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="zCushEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Addresses" EntityType="Self.Address" />
+          <EntitySet Name="CarrierTypes" EntityType="Self.CarrierType" />
+          <EntitySet Name="Contacts" EntityType="Self.Contact" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="CustomerTypes" EntityType="Self.CustomerType" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="OrderLineItems" EntityType="Self.OrderLineItem" />
+          <EntitySet Name="OrderStatus1" EntityType="zCushModel.OrderStatus" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Ref_AmazonWarehouse" EntityType="Self.Ref_AmazonWarehouse" />
+          <EntitySet Name="Shipments" EntityType="Self.Shipment" />
+          <EntitySet Name="ThirdPartyShipmentCarrierAccounts" EntityType="Self.ThirdPartyShipmentCarrierAccount" />
+          <AssociationSet Name="FK_BusinessCustomer_0" Association="Self.FK_BusinessCustomer_0">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrder_0" Association="Self.FK_PurchaseOrder_0">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ref_AmazonWarehouse_0" Association="Self.FK_Ref_AmazonWarehouse_0">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Ref_AmazonWarehouse" EntitySet="Ref_AmazonWarehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessCustomer_1" Association="Self.FK_BusinessCustomer_1">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_0" Association="Self.FK_Customer_0">
+            <End Role="CustomerType" EntitySet="CustomerTypes" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrder_1" Association="Self.FK_PurchaseOrder_1">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_0" Association="Self.FK_Order_0">
+            <End Role="OrderStatus" EntitySet="OrderStatus1" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrderLineItem_0" Association="Self.FK_PurchaseOrderLineItem_0">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderLineItem" EntitySet="OrderLineItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrderLineItem_1" Association="Self.FK_PurchaseOrderLineItem_1">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderLineItem" EntitySet="OrderLineItems" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="zCushModelStoreContainer" CdmEntityContainer="zCushEntities">
+          <EntitySetMapping Name="Addresses">
+            <EntityTypeMapping TypeName="zCushModel.Address">
+              <MappingFragment StoreEntitySet="Address">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CarrierTypes">
+            <EntityTypeMapping TypeName="zCushModel.CarrierType">
+              <MappingFragment StoreEntitySet="CarrierType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="zCushModel.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="zCushModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTypes">
+            <EntityTypeMapping TypeName="zCushModel.CustomerType">
+              <MappingFragment StoreEntitySet="CustomerType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="zCushModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PONumber" ColumnName="PONumber" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="PODate" ColumnName="PODate" />
+                <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderLineItems">
+            <EntityTypeMapping TypeName="zCushModel.OrderLineItem">
+              <MappingFragment StoreEntitySet="OrderLineItem">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderStatus1">
+            <EntityTypeMapping TypeName="zCushModel.OrderStatus">
+              <MappingFragment StoreEntitySet="OrderStatus">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="zCushModel.Product">
               <MappingFragment StoreEntitySet="Product">
@@ -564,109 +679,37 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Addresses">
-            <EntityTypeMapping TypeName="zCushModel.Address">
-              <MappingFragment StoreEntitySet="Address">
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
-                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+          <EntitySetMapping Name="Ref_AmazonWarehouse">
+            <EntityTypeMapping TypeName="zCushModel.Ref_AmazonWarehouse">
+              <MappingFragment StoreEntitySet="Ref_AmazonWarehouse">
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CarrierTypes">
-            <EntityTypeMapping TypeName="zCushModel.CarrierType">
-              <MappingFragment StoreEntitySet="CarrierType">
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="SanCode" ColumnName="SanCode" />
+                <ScalarProperty Name="CartonQtySanCode" ColumnName="CartonQtySanCode" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Contacts">
-            <EntityTypeMapping TypeName="zCushModel.Contact">
-              <MappingFragment StoreEntitySet="Contact">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
-                <ScalarProperty Name="Fax" ColumnName="Fax" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Orders">
-            <EntityTypeMapping TypeName="zCushModel.Order">
-              <MappingFragment StoreEntitySet="Order">
-                <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusId" />
-                <ScalarProperty Name="PODate" ColumnName="PODate" />
                 <ScalarProperty Name="AddressId" ColumnName="AddressId" />
-                <ScalarProperty Name="BusinessCustomerId" ColumnName="BusinessCustomerId" />
-                <ScalarProperty Name="PONumber" ColumnName="PONumber" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderLineItems">
-            <EntityTypeMapping TypeName="zCushModel.OrderLineItem">
-              <MappingFragment StoreEntitySet="OrderLineItem">
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderStatus">
-            <EntityTypeMapping TypeName="zCushModel.OrderStatu">
-              <MappingFragment StoreEntitySet="OrderStatus">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Shipments">
             <EntityTypeMapping TypeName="zCushModel.Shipment">
               <MappingFragment StoreEntitySet="Shipment">
-                <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
-                <ScalarProperty Name="CarrierTypeId" ColumnName="CarrierTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CarrierTypeId" ColumnName="CarrierTypeId" />
+                <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Ref_AmazonWarehouse">
-            <EntityTypeMapping TypeName="zCushModel.Ref_AmazonWarehouse">
-              <MappingFragment StoreEntitySet="Ref_AmazonWarehouse">
-                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CartonQtySanCode" ColumnName="CartonQtySanCode" />
-                <ScalarProperty Name="SanCode" ColumnName="SanCode" />
-                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+          <EntitySetMapping Name="ThirdPartyShipmentCarrierAccounts">
+            <EntityTypeMapping TypeName="zCushModel.ThirdPartyShipmentCarrierAccount">
+              <MappingFragment StoreEntitySet="ThirdPartyShipmentCarrierAccount">
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="zCushModel.Customer">
-              <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CustomerTypes">
-            <EntityTypeMapping TypeName="zCushModel.CustomerType">
-              <MappingFragment StoreEntitySet="CustomerType">
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CarrierTypeId" ColumnName="CarrierTypeId" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

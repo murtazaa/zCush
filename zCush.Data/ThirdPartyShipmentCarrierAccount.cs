@@ -12,16 +12,13 @@ namespace zCush.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class OrderStatu
+    public partial class ThirdPartyShipmentCarrierAccount
     {
-        public OrderStatu()
-        {
-            this.Orders = new HashSet<Order>();
-        }
-    
         public int ID { get; set; }
-        public string Status { get; set; }
-    
-        public virtual ICollection<Order> Orders { get; set; }
+        public int CustomerId { get; set; }
+        public int CarrierTypeId { get; set; }
+        public string AccountNumber { get; set; }
+        public string ZipCode { get; set; }
+        public string Country { get; set; }
     }
 }

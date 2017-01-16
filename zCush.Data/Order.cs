@@ -21,14 +21,14 @@ namespace zCush.Data
     
         public int ID { get; set; }
         public string PONumber { get; set; }
-        public int BusinessCustomerId { get; set; }
+        public int CustomerId { get; set; }
         public int AddressId { get; set; }
         public System.DateTime PODate { get; set; }
         public int OrderStatusId { get; set; }
     
         public virtual Address Address { get; set; }
-        public virtual OrderStatu OrderStatu { get; set; }
-        public virtual ICollection<OrderLineItem> OrderLineItems { get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual OrderStatus OrderStatus { get; set; }
+        public virtual ICollection<OrderLineItem> OrderLineItems { get; set; }
     }
 }

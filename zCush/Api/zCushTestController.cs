@@ -124,7 +124,7 @@ namespace zCush.Api
             //shipTo.State = "PA";
             //shipTo.ZipCode = "15108";
 
-            ss.CreateFedExLabel(shipTo, Shipping3PartyAccounts.Amazon, "12345");
+            ss.CreateFedExLabel(shipTo, Shipping3PartyAccounts.Amazon, "12345", 1);
 
             return Request.CreateResponse(HttpStatusCode.OK, "Success");
         }
